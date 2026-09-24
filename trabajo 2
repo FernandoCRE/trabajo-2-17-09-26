@@ -2,12 +2,10 @@
 using namespace std;
 
 
-//funtor
 
 class mult3
 {
 public:
-
     bool operator()(int a)
     {
         return !(a % 3);
@@ -15,18 +13,12 @@ public:
 };
 
 
-//template
-
 template <class O>
-class util
+class Util
 {
 public:
 
-    O criterio;
-
-
-    //merge
-
+   
     void merge(int* ini, int* mid, int* fin)
     {
         int* p = ini;
@@ -34,23 +26,20 @@ public:
 
         while (p < q && q < fin)
         {
-            // derecha es menor q izquiera
-          
             if (*q < *p)
             {
-                int valor = *q;
+                int aux = *q;
 
                 int* r = q;
 
-                // movemos a derecha
+                // mueve derecha
                 while (r > p)
                 {
                     *r = *(r - 1);
                     --r;
                 }
 
-                // colocamos el menor
-                *p = valor;
+                *p = aux;
 
                 ++p;
                 ++q;
@@ -64,85 +53,48 @@ public:
     }
 
 
-
-
-    //split
-
+    
     void split(int* ini, int* fin)
     {
-        // caso base
-        if (fin - ini <= 1)
-            return;
+        O condicion;
 
-
-        // mitad
-        int* mid = ini + (fin - ini) / 2;
-
-
-        // part izquierda
-        split(ini, mid);
-
-
-        // derecha
-        split(mid, fin);
-
-
-        // ordenamos
-        merge(ini, mid, fin);
-    }
-
-
-
-    //funtor aplicado
-
-    void aplicar(int* ini, int* fin)
-    {
         int* p = ini;
 
-        
+        //elementos
         int cantidad = fin - ini;
-
 
         while (cantidad > 0)
         {
-            // Si cumple la condicion
-            if (criterio(*p))
+            // 
+            if (condicion(*p))
             {
-                // Se queda donde esta
                 ++p;
             }
 
-           
+            // final
             else
             {
-                int valor = *p;
+                int aux = *p;
 
                 int* q = p;
 
-
-                // Movemos todo una posicion
-                // hacia la izquierda
+                // mov izq
                 while (q < fin - 1)
                 {
                     *q = *(q + 1);
                     ++q;
                 }
 
-
-                // no cumple=final
-                *(fin - 1) = valor;
+                // elem al final
+                *(fin - 1) = aux;
             }
 
-
-            // Ya evaluamos un elemento
             --cantidad;
         }
     }
 
 
-
-   
-
+    
     void mostrar(int* ini, int* fin)
     {
         int* p = ini;
@@ -158,48 +110,32 @@ public:
 };
 
 
-
-
-
 int main()
 {
-    int A[] ={3, 6, 9, 33, 1, 2, 4, 8, 11, 25, 30, 60};
-    
+    int A[] = { 1, 2, 3, 44, 45, 8, 11, 25, 30, 60 };
 
     int* ini = A;
+    int* mid = A + 5;
+    int* fin = A + 10;
 
-    //int* fin = A + sizeof(A) / sizeof(*A);
-    int* fin = A + 12;
-
-
-    util<mult3> util;
+    Util<mult3> util;
 
 
-
-    cout << "array normal" << endl;
-
+    cout << "array inicial:" << endl;
     util.mostrar(ini, fin);
 
 
+   
+    util.merge(ini, mid, fin);
 
-    ///ordenamos
+    cout << "\nordenado:" << endl;
+    util.mostrar(ini, fin);
 
+
+    
     util.split(ini, fin);
 
-
-    cout << "\array ordenado:" << endl;
-
-    util.mostrar(ini, fin);
-
-
-
-    /// ordenamos los mult de 3
-
-    util.aplicar(ini, fin);
-
-
-    cout << "\multiplos de 3" << endl;
-
+    cout << "\nmult de 3:" << endl;
     util.mostrar(ini, fin);
 
 
